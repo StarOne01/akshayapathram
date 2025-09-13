@@ -1,10 +1,18 @@
 const Org = require("../models/Org");
-const Donar = require("../models/Donar");
+const Donor = require("../models/Donor");
 
 // ADD ORGANIZATION DETAILS
 const addOrgDetails = async (req, res) => {
     try {
         const { user_id, address, size, log_id } = req.body;
+
+        if (!user_id || !address || !size || !log_id) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        if (!address.latitude || !address.longitude) {
+            return res.status(400).json({ error: "Address must include latitude and longitude" });
+        }
 
         let org = await Org.findOne({ user_id });
         if (!org) {
@@ -24,7 +32,7 @@ const addOrgDetails = async (req, res) => {
         await org.save();
         res.json({ message: "Organization details added/updated successfully", org });
     } catch (error) {
-        console.error(error);
+        console.error("Error adding/updating organization details:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
@@ -34,9 +42,13 @@ const addDonorDetails = async (req, res) => {
     try {
         const { user_id, donation } = req.body;
 
-        let donor = await Donar.findOne({ user_id });
+        if (!user_id || !donation) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        let donor = await Donor.findOne({ user_id });
         if (!donor) {
-            donor = new Donar({
+            donor = new Donor({
                 user_id,
                 donations: [donation]
             });
@@ -47,7 +59,7 @@ const addDonorDetails = async (req, res) => {
         await donor.save();
         res.json({ message: "Donor donation added successfully", donor });
     } catch (error) {
-        console.error(error);
+        console.error("Error adding donor details:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 };

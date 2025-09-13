@@ -10,9 +10,15 @@ const generateToken = (id, phno, role) => {
 const registerUser = async (req, res) => {
     try {
         const { name, phno, password, role } = req.body;
+
+        if (!name || !phno || !password || !role) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
         if (!["admin", "organization", "donor"].includes(role)) {
             return res.status(400).json({ error: "Invalid role for user registration" });
         }
+
         const existingUser = await User.findOne({ phno });
         if (existingUser) return res.status(400).json({ error: "User already exists" });
 
@@ -30,23 +36,33 @@ const registerUser = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { phno, password } = req.body;
-        const user = await User.findOne({ phno });
-        if (user) {
-           // const token = generateToken(user._id, user.phno, user.role);
-            return res.json({
-                id:user._id,
-                success: true,
-              //  token,
-                user: {
-                    id: user._id,
-                    role: user.role,
-                    isLoggedIn: true,
-                    phno: user.phno,
-                    name: user.name
-                }
-            });
+
+        if (!phno || !password) {
+            return res.status(400).json({ error: "Phone number and password are required" });
         }
-        return res.status(401).json({ success: false, error: "Invalid credentials" });
+
+        const user = await User.findOne({ phno });
+        if (!user) return res.status(401).json({ success: false, error: "Invalid credentials" });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(401).json({ success: false, error: "Invalid credentials" });
+
+        const token = generateToken(user._id, user.phno, user.role);
+
+        return res.json({
+            id: user._id,
+            success: true,
+            token,
+            user: {
+                id: user._id,
+                role: user.role,
+                isLoggedIn: true,
+                phno: user.phno,
+                name: user.name
+            }
+        });
+    
+        
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal server error" });

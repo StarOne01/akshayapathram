@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const authMiddleware = require("./middleware/authMiddleware");
 const donateRoutes = require("./routes/donateRoutes");
 const ngoRoutes = require("./routes/ngoRoutes");
+const recommendRoutes = require("./routes/recommendRoutes");
 
 const app = express();
 const port = 3000;
@@ -16,14 +17,15 @@ app.use(cors());
 
 mongoose
   .connect(process.env.MONGO_URI, {
-    dbName: "aksyapatra",
+    dbName: "akshayapathram",
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
-app.use("/", authRoutes);
-app.use("/", donateRoutes);
-app.use("/", ngoRoutes)
+app.use("/auth", authRoutes);
+app.use("/donate", authMiddleware, donateRoutes);
+app.use("/ngo", authMiddleware, ngoRoutes);
+app.use("/recommend", authMiddleware, recommendRoutes);
 
 app.get("/protected", authMiddleware, (req, res) => {
   res.json({ message: "Protected data", user: req.user });

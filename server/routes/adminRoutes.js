@@ -1,5 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const authController = require("../controllers/authController");
 
-router.post("/admin/", authController.registerUser); // Line likely causing the error
-router.post("/login", authController.login);
+router.post("/admin/register", authController.registerUser);
+router.post("/admin/login", authController.login);
+
+module.exports = router;
