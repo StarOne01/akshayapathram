@@ -8,6 +8,7 @@ const authMiddleware = require("./middleware/authMiddleware");
 const donateRoutes = require("./routes/donateRoutes");
 const ngoRoutes = require("./routes/ngoRoutes");
 const recommendRoutes = require("./routes/recommendRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 const port = 3000;
@@ -26,6 +27,7 @@ app.use("/auth", authRoutes);
 app.use("/donate", authMiddleware, donateRoutes);
 app.use("/ngo", authMiddleware, ngoRoutes);
 app.use("/recommend", authMiddleware, recommendRoutes);
+app.use('/admin', adminRoutes);
 
 app.get("/protected", authMiddleware, (req, res) => {
   res.json({ message: "Protected data", user: req.user });
