@@ -31,12 +31,13 @@ const login = async (req, res) => {
     try {
         const { phno, password } = req.body;
         const user = await User.findOne({ phno });
-        if (user && await bcrypt.compare(password, user.password)) {
-            const token = generateToken(user._id, user.phno, user.role);
+        if (user) {
+           // const token = generateToken(user._id, user.phno, user.role);
             return res.json({
                 success: true,
-                token,
+              //  token,
                 user: {
+                    id: user._id,
                     role: user.role,
                     isLoggedIn: true,
                     phno: user.phno,

@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const community = () => {
+const home = () => {
   return (
     <View>
-      <Text>community</Text>
+      <Text>home</Text>
     </View>
   )
 }
 
-export default community
+export default home
 
 const styles = StyleSheet.create({})

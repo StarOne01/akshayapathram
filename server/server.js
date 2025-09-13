@@ -12,14 +12,17 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB connected"))
-    .catch((err) => console.log(err));
+mongoose
+  .connect(process.env.MONGO_URI, {
+    dbName: "aksyapatra",
+  })
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.log(err));
 
 app.use("/", authRoutes);
 
 app.get("/protected", authMiddleware, (req, res) => {
-    res.json({ message: "Protected data", user: req.user });
+  res.json({ message: "Protected data", user: req.user });
 });
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

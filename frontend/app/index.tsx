@@ -16,8 +16,8 @@ export default function Index() {
         </View>
       </View>
       <TouchableOpacity
-        onPress={()=>{
-          router.push("/login/LoginScreen")
+        onPress={() => {
+          router.push("/login/LoginScreen");
         }}
         className="bg-secondary
       py-4 mx-8 flex items-center justify-center rounded-xl"
