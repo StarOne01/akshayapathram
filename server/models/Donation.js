@@ -13,7 +13,7 @@ const donationSchema = new mongoose.Schema({
     },
     quantity: String,
     img_url: String,
-    
+    preferred_org: String
 });
 
 module.exports = mongoose.model("Donation", donationSchema);

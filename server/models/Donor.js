@@ -8,4 +8,4 @@ const donorSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Donar", donorSchema);
+module.exports = mongoose.model("Donor", donorSchema);

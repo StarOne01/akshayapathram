@@ -258,6 +258,10 @@ const DonationForms = () => {
           </View>
         </View>
       </Modal>
+      
+      <View>
+         
+      </View>
 
       <TouchableOpacity
         onPress={() => {
@@ -280,7 +284,7 @@ const DonationForms = () => {
         }}
         className="bg-secondary m-5 py-4 flex items-center justify-center rounded-xl"
       >
-        <Text className="text-white text-lg">Submit Donation</Text>
+        <Text className="text-white text-lg"> Create Donation</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
