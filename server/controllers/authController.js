@@ -10,6 +10,7 @@ const generateToken = (user) => jwt.sign(
 
 const register = async (req, res) => {
     try {
+        console.log(req.body)
         const { name, email, password, role } = req.body;
         if (!["admin", "organization", "donor"].includes(role)) {
             return res.status(400).json({ error: "Invalid role" });
@@ -26,7 +27,6 @@ const register = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
-
 
 const login = async (req, res) => {
     const { email, password } = req.body;
