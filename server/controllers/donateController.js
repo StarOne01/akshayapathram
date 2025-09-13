@@ -25,6 +25,29 @@ const donate = async (req, res) => {
     }
 }
 
+const getAllDonations =  async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid donation ID" });
+        }
+
+        const donation = await Donation.findById(id).populate("userId", "name email");
+
+        if (!donation) {
+            return res.status(404).json({ message: "Donation not found" });
+        }
+
+        res.json(donation);
+    } catch (err) {
+        console.error("Error fetching donation:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
 module.exports = {
-    donate
+    donate,
+    getAllDonations
 }
+
