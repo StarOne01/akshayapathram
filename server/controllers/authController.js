@@ -34,6 +34,7 @@ const login = async (req, res) => {
         if (user && await bcrypt.compare(password, user.password)) {
             const token = generateToken(user._id, user.phno, user.role);
             return res.json({
+                id:user._id,
                 success: true,
                 token,
                 user: {

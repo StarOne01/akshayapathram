@@ -6,6 +6,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const authMiddleware = require("./middleware/authMiddleware");
 const donateRoutes = require("./routes/donateRoutes");
+const ngoRoutes = require("./routes/ngoRoutes");
 
 const app = express();
 const port = 3000;
@@ -19,6 +20,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 app.use("/", authRoutes);
 app.use("/", donateRoutes);
+app.use("/", ngoRoutes)
 
 app.get("/protected", authMiddleware, (req, res) => {
     res.json({ message: "Protected data", user: req.user });
