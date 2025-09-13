@@ -1,8 +1,10 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useRouter } from "expo-router";
 
 export default function Index() {
+  const router = useRouter();
   return (
     <SafeAreaView>
       <View className=" h-[85vh] w-full items-center justify-center">
@@ -14,6 +16,9 @@ export default function Index() {
         </View>
       </View>
       <TouchableOpacity
+        onPress={()=>{
+          router.push("/login/LoginScreen")
+        }}
         className="bg-secondary
       py-4 mx-8 flex items-center justify-center rounded-xl"
       >
