@@ -1,15 +1,30 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    <SafeAreaView>
+      <View className=" h-[85vh] w-full items-center justify-center">
+        <View className=" flex items-center flex-col gap-3">
+          <FontAwesome6 name="bowl-food" size={35} color="black" />
+          <Text className="text-xl text-secondary  font-bold ">
+            AkshyaPatra
+          </Text>
+        </View>
+      </View>
+      <TouchableOpacity
+        className="bg-secondary
+      py-4 mx-8 flex items-center justify-center rounded-xl"
+      >
+        <Text
+          className="
+          text-white
+        "
+        >
+          Get Started
+        </Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
