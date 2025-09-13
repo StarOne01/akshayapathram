@@ -1,13 +1,8 @@
 const mongoose = require("mongoose");
+const Donation = require("./Donation");
 
 const donorSchema = new mongoose.Schema({
-    name: String,
-    phno: String,
-    password: String,
-    is_approved: {
-        type: Boolean,
-        default: false
-    }
+    donotion : [Donation]
 });
 
 module.exports = mongoose.model("Donar", donorSchema);
