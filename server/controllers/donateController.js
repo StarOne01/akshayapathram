@@ -1,10 +1,10 @@
 const Donation = require("../models/Donation")
-const User = require("../models/User");
 
 const donate = async (req, res) => {
     try {
 
         const donation = new Donation({
+            userId: req.body.userId,
             item: req.body.item,
             description: req.body.description,
             location: {
@@ -16,10 +16,15 @@ const donate = async (req, res) => {
 
         })
         await donation.save();
+
         res.status(200).json({ message: "done!"});
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal server error" });
     }
+}
+
+module.exports = {
+    donate
 }
