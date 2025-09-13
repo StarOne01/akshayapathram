@@ -13,7 +13,6 @@ const LoginScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
-
   return (
     <SafeAreaView className=" h-screen w-full flex items-center justify-center">
       <View>
@@ -50,8 +49,6 @@ const LoginScreen = () => {
         <TouchableOpacity
           className=" bg-secondary w-[70%]  px-8 py-2 rounded-xl mt-8"
           onPress={() => {
-            // Handle login logic here
-            //   router.push("/")
             router.push("/donors/(tabs)/home");
           }}
         >
