@@ -2,51 +2,56 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const generateToken = (user) => jwt.sign(
-    { id: user._id, email: user.email, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "1h" }
-);
+const generateToken = (id, phno, role) => {
+    return jwt.sign({ id, phno, role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+};
 
-const register = async (req, res) => {
+// REGISTER USER
+const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, phno, password, role } = req.body;
         if (!["admin", "organization", "donor"].includes(role)) {
-            return res.status(400).json({ error: "Invalid role" });
+            return res.status(400).json({ error: "Invalid role for user registration" });
         }
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ phno });
         if (existingUser) return res.status(400).json({ error: "User already exists" });
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ name, email, password: hashedPassword, role });
+        const user = new User({ name, phno, password: hashedPassword, role });
         await user.save();
-        res.json({ message: `${role} registered successfully` });
+        res.json({ message: `${role.charAt(0).toUpperCase() + role.slice(1)} registered successfully` });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
 
-
+// LOGIN USER
 const login = async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (user && await bcrypt.compare(password, user.password)) {
-        const token = generateToken(user);
-        return res.json({
-            success: true,
-            token,
-            user: {
-                isAdmin: user.role === "admin",
-                isOrganization: user.role === "organization",
-                isDonor: user.role === "donor",
-                isLoggedIn: true,
-                email: user.email,
-                role: user.role
-            }
-        });
+    try {
+        const { phno, password } = req.body;
+        const user = await User.findOne({ phno });
+        if (user && await bcrypt.compare(password, user.password)) {
+            const token = generateToken(user._id, user.phno, user.role);
+            return res.json({
+                success: true,
+                token,
+                user: {
+                    role: user.role,
+                    isLoggedIn: true,
+                    phno: user.phno,
+                    name: user.name
+                }
+            });
+        }
+        return res.status(401).json({ success: false, error: "Invalid credentials" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
     }
-    return res.status(401).json({ success: false, error: "Invalid credentials" });
 };
 
-module.exports = { register, login };
+module.exports = {
+    registerUser,
+    login
+};
