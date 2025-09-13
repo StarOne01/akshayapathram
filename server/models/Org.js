@@ -11,6 +11,10 @@ const orgSchema = new mongoose.Schema({
     },
     size: Number,
     log_id: String,
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
 });
 
 module.exports = mongoose.model("Org", orgSchema);
