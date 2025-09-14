@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
+import axiosInstance from '../axiosInstance';
 
 const requestsData = Array.from({ length: 20 }, (_, i) => ({
   id: i + 1,
@@ -9,10 +10,46 @@ const requestsData = Array.from({ length: 20 }, (_, i) => ({
 
 const Main = () => {
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [fetchRequests, setFetchRequests] = useState([]);
+  const [pending, setPending] = useState(0);
+
+  useEffect(() => {
+    const fetchRequest = async () => {
+      try {
+        const response = await axiosInstance.get('/admin/requests');
+        setFetchRequests(response.data.pending);
+        setPending(response.data.count);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchRequest();
+  }, []);
 
   const total = requestsData.length;
-  const pending = requestsData.filter(r => r.status === 'pending').length;
   const accepted = requestsData.filter(r => r.status === 'accepted').length;
+
+  const handleApprove = async () => {
+    if (!selectedRequest) return;
+    try {
+      await axiosInstance.post(`/admin/orgs/${selectedRequest.id}/approve`);
+      alert('Organization approved');
+      setSelectedRequest(null);
+    } catch (error) {
+      console.error('Approve error:', error);
+    }
+  };
+
+  const handleDeny = async () => {
+    if (!selectedRequest) return;
+    try {
+      await axiosInstance.post(`/admin/orgs/${selectedRequest.id}/deny`);
+      alert('Organization denied and removed');
+      setSelectedRequest(null);
+    } catch (error) {
+      console.error('Deny error:', error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -60,10 +97,16 @@ const Main = () => {
             <div className="w-full md:w-1/3 bg-white p-6 rounded-lg shadow h-[300px]">
               <h2 className="text-xl font-semibold mb-4">Actions</h2>
               <div className="space-y-4">
-                <button className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition-colors">
+                <button
+                  onClick={handleApprove}
+                  className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition-colors"
+                >
                   Accept
                 </button>
-                <button className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition-colors">
+                <button
+                  onClick={handleDeny}
+                  className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition-colors"
+                >
                   Reject
                 </button>
               </div>

@@ -10,7 +10,7 @@ router.post("/admin/register", authController.registerUser);
 router.post("/admin/login", authController.login);
 
 // Admin-only endpoints to manage organization/home requests (single entity)
-router.get('/requests', authMiddleware, adminMiddleware, adminController.listPendingOrgs);
+router.get('/requests', adminController.listPendingOrgs);
 router.post('/requests/:orgId/approve', authMiddleware, adminMiddleware, adminController.approveOrg);
 router.post('/requests/:orgId/deny', authMiddleware, adminMiddleware, adminController.denyOrg);
 
