@@ -9,6 +9,9 @@ const adminMiddleware = require("../middleware/adminMiddleware");
 router.post("/admin/register", authController.registerUser);
 router.post("/admin/login", authController.login);
 
+// Admin route to get user details
+router.get("/user/:user_id", authMiddleware, adminMiddleware, adminController.getUserById);
+
 // Admin-only endpoints to manage organization/home requests (single entity)
 router.get('/requests', adminController.listPendingOrgs);
 router.post('/requests/:orgId/approve', authMiddleware, adminMiddleware, adminController.approveOrg);

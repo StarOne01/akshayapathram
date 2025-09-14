@@ -1,5 +1,7 @@
 const Org = require('../models/Org');
 const AdminRequest = require('../models/AdminRequests');
+const User = require('../models/User');
+const Donor = require('../models/Donor');
 
 // List pending organization requests
 const listPendingOrgs = async (req, res) => {
@@ -52,8 +54,53 @@ const denyOrg = async (req, res) => {
   }
 };
 
+// Get user information by ID
+const getUserById = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    
+    // Find the user by ID
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Initialize response object with user data
+    const userInfo = {
+      user: {
+        _id: user._id,
+        name: user.name,
+        phno: user.phno,
+        role: user.role
+      }
+    };
+
+    // Check if user is associated with a donor profile
+    const donor = await Donor.findOne({ user_id: user_id });
+    if (donor) {
+      userInfo.donor = donor;
+    }
+
+    // Check if user is associated with an organization
+    const org = await Org.findOne({ user_id: user_id });
+    if (org) {
+      userInfo.organization = org;
+    }
+
+    res.json({
+      message: 'User information retrieved successfully',
+      data: userInfo
+    });
+
+  } catch (err) {
+    console.error('Error getting user by ID:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   listPendingOrgs,
   approveOrg,
-  denyOrg
+  denyOrg,
+  getUserById
 };
