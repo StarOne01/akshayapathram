@@ -2,11 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import axiosInstance from '../axiosInstance';
 
-const requestsData = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  name: `Request ${i + 1}`,
-  status: i % 2 === 0 ? 'pending' : 'accepted',
-}));
 
 const Main = () => {
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -17,17 +12,16 @@ const Main = () => {
     const fetchRequest = async () => {
       try {
         const response = await axiosInstance.get('/admin/requests');
-        setFetchRequests(response.data.pending);
+        setFetchRequests(response);
+        console.log(response);
         setPending(response.data.count);
       } catch (e) {
         console.log(e);
       }
     };
-    fetchRequest();
+   fetchRequest();
   }, []);
 
-  const total = requestsData.length;
-  const accepted = requestsData.filter(r => r.status === 'accepted').length;
 
   const handleApprove = async () => {
     if (!selectedRequest) return;
@@ -57,27 +51,12 @@ const Main = () => {
       <div className="flex-1 p-8 bg-gray-100">
         <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-blue-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <div className="text-sm uppercase mb-2">Total Requests</div>
-            <div className="text-2xl font-bold">{total}</div>
-          </div>
-          <div className="bg-yellow-500 text-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <div className="text-sm uppercase mb-2">Pending Requests</div>
-            <div className="text-2xl font-bold">{pending}</div>
-          </div>
-          <div className="bg-green-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <div className="text-sm uppercase mb-2">Accepted Requests</div>
-            <div className="text-2xl font-bold">{accepted}</div>
-          </div>
-        </div>
-
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-1 bg-white p-6 rounded-lg shadow h-[300px] flex flex-col">
             <h2 className="text-xl font-semibold mb-4">Requests List</h2>
             <div className="flex-1 overflow-y-auto">
               <ul>
-                {requestsData.map((request) => (
+                {fetchRequests.map((request) => (
                   <li
                     key={request.id}
                     onClick={() => setSelectedRequest(request)}

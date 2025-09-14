@@ -5,7 +5,7 @@ const AdminRequest = require('../models/AdminRequests');
 const listPendingOrgs = async (req, res) => {
   try {
     const pending = await Org.find({ is_approved: false });
-    res.json({ count: pending.length, pending });
+    res.json({ pending });
   } catch (err) {
     console.error('Error listing pending orgs:', err);
     res.status(500).json({ error: 'Internal server error' });
